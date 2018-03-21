@@ -1,7 +1,7 @@
 local function primify(a)
 local n = {}
 local i = 2
-while i^2 < a do
+while i^2 <= a do
   while a%i==0 do 
     table.insert(n, i)
     a = a / i
