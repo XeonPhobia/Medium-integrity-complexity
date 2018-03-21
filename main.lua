@@ -1,6 +1,8 @@
 local function primify(a)
 local n = {}
+if a < 6 then n[1] = a return n; end
 local i = 2
+
 while i^2 <= a do
   while a%i==0 do 
     table.insert(n, i)
@@ -30,7 +32,8 @@ p = p .. ')'
   return p;
 end
 
-local function summary(line)  
+local function summary(line) 
+if type(line) == 'number' then line = tostring(line) end 
 local mapLine = {}
 local s = 1
 while true do
@@ -41,20 +44,34 @@ local sum = 0
     for k,v in pairs(mapLine) do
         sum = sum + v
     end
-print(sum)
+return sum;
 end
 
 local function main()
-a = 5678
-n = primify(a)
-for i = 1, #n do
-  n[i] = divide(n[i])
+pe = {sum = {1}, representation = {1}}
+for a = 2, 1000 do
+  pe.sum[a], pe.representation[a] = (function (a) local n = primify(a)
+  for i = 1, #n do
+    n[i] = divide(n[i])
+  end
+  local p
+  for i = 1, #n do
+    if i == 1 then p = n[i] else p = p .. '*' .. n[i] end
+  end
+  return summary(p), p;
+end)(a)
+
+  if pe.sum[a] > 1 + pe.sum[a - 1] then 
+    pe.sum[a] = 1 + pe.sum[a - 1]
+    pe.representation[a] = '1+' .. pe.representation[a - 1]  end
+end 
+--for i = 1, #pe.sum do
+--  print(i, pe.sum[i], pe.representation[i])
+--end 
+numb = 0
+for i = 1, #pe.sum do
+  numb = numb + pe.sum[i]
 end
-local p
-for i = 1, #n do
-  if i == 1 then p = n[i] else p = p .. '*' .. n[i] end
-end
-print(p)
-print(summary(p))
+print("1000 =", numb)
 end
 main()
